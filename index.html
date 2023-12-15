@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Designer Color Predictor</title>
+    <style>
+        /* Global Styles */
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Times New Roman', serif;
+            background: linear-gradient(to right, #f4a261, #2a9d8f);
+            transition: background 0.5s ease;
+            position: relative;
+        }
+
+        /* Header Styles */
+        #header {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        #instagramLogo {
+            width: 40px;
+            margin-right: 10px;
+        }
+
+        #blkBustinNuts {
+            font-size: 24px;
+            font-weight: bold;
+            color: #fff; /* White color for text on black background */
+            cursor: pointer;
+            text-decoration: underline;
+            font-family: 'Times New Roman', serif;
+        }
+
+        /* Prediction Container Styles */
+        #predictionContainer {
+            text-align: center;
+            background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent black */
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            position: relative;
+            display: none; /* Initially hide the container */
+        }
+
+        #predictionCircle {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin: 20px auto; /* Center the circle */
+            background: linear-gradient(45deg, #e76f51, #457b9d);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: bold;
+            color: #fff;
+            animation: colorPop 2s infinite alternate;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: box-shadow 0.3s ease;
+        }
+
+        /* Color Animation */
+        @keyframes colorPop {
+            from {
+                background: linear-gradient(45deg, #e76f51, #457b9d);
+            }
+            to {
+                background: linear-gradient(45deg, #f67280, #6c757d);
+            }
+        }
+
+        /* Input Styles */
+        input {
+            margin-top: 30px;
+            padding: 14px;
+            font-size: 18px;
+            border: 2px solid #333;
+            border-radius: 25px;
+            text-align: left;
+            width: 300px;
+            outline: none;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Added box-shadow transition */
+            padding-left: 20px; /* Left padding for text */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Added box shadow */
+        }
+
+        /* Button Styles */
+        button {
+            margin-top: 15px;
+            padding: 16px 24px;
+            font-size: 18px;
+            background: linear-gradient(to right, #e76f51, #457b9d);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.2s ease-in-out, box-shadow 0.3s ease; /* Added box-shadow transition */
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        button:hover {
+            background: linear-gradient(to right, #f67280, #6c757d);
+        }
+
+        button:active {
+            transform: scale(0.95);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* Added box shadow on click */
+        }
+
+        /* Prediction History Styles */
+        #historyContainer {
+            margin-top: 20px;
+            max-height: 100px;
+            overflow-y: auto;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Key Input Styles */
+        #keyInput {
+            text-align: center;
+            margin-top: 100px;
+            display: block; /* Initially show the key input section */
+        }
+
+        #keyInput label {
+            color: #fff;
+            font-size: 18px;
+            margin-right: 10px;
+        }
+
+        #keyInput input {
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #333;
+            border-radius: 8px;
+            outline: none;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        #keyInput button {
+            padding: 12px 20px;
+            font-size: 16px;
+            background: linear-gradient(to right, #e76f51, #457b9d);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.2s ease-in-out, box-shadow 0.3s ease;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        #keyInput button:hover {
+            background: linear-gradient(to right, #f67280, #6c757d);
+        }
+
+        #keyInput button:active {
+            transform: scale(0.95);
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* ... (other styles) */
+
+    </style>
+</head>
+<body>
+
+<!-- Key Input Section -->
+<div id="keyInput">
+    <label for="key">Enter Key: </label>
+    <input type="password" id="key" placeholder="Enter key">
+    <button onclick="checkKey()">Unlock</button>
+</div>
+
+<!-- Header Section -->
+<div id="header">
+    <img src="https://www.logo.wine/a/logo/Instagram/Instagram-Wordmark-Black-Logo.wine.svg" alt="Instagram Logo" id="instagramLogo">
+    <span>Follow me on</span>
+    <a href="https://www.instagram.com/blk_bustin_nuts?igshid=OGQ5ZDc2ODk2ZA==" target="_blank" rel="noopener noreferrer" id="blkBustinNuts">Instagram</a>
+</div>
+
+<!-- Prediction Container Section -->
+<div id="predictionContainer">
+    <div id="predictionCircle">?</div>
+    <input type="number" id="inputNumber" placeholder="Search for a 4-digit number" maxlength="4" oninput="validity.valid||(value='');">
+    <button onclick="predictColor()">Predict Color</button>
+    <div id="historyContainer"></div>
+</div>
+
+<!-- JavaScript Section -->
+<script>
+    var keys = [
+        { key: "xdx3", expiryDays: 3 },
+        { key: "blk3", expiryDays: 3 },
+        { key: "bm3", expiryDays: 3 },
+        { key: "rm4", expiryDays: 3 },
+        { key: "jm6", expiryDays: 3 }
+    ];
+
+    function checkKey() {
+        var keyInput = document.getElementById("key").value;
+        var isValid = isValidKey(keyInput);
+        if (isValid) {
+            document.getElementById("keyInput").style.display = "none"; // Hide the key input section
+            document.getElementById("predictionContainer").style.display = "block"; // Show the prediction container
+        } else {
+            alert("Invalid key or key has expired. Please try again.");
+        }
+    }
+
+    function isValidKey(key) {
+        var storedKeyData = keys.find(k => k.key === key);
+
+        if (storedKeyData && isWithinExpiry(storedKeyData.expiryDays)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    function isWithinExpiry(expiryDays) {
+        var storedTimestamp = localStorage.getItem("unlockTimestamp");
+
+        if (!storedTimestamp || Date.now() - storedTimestamp <= expiryDays * 24 * 60 * 60 * 1000) {
+            return true;
+        }
+
+        return false;
+    }
+
+    function predictColor() {
+        var inputNumber = document.getElementById("inputNumber").value;
+        if (inputNumber.length === 4) {
+            var colorPrediction = getRandomColor();
+            document.getElementById("predictionCircle").style.background = colorPrediction;
+            document.getElementById("predictionCircle").innerText = colorPrediction === 'red' ? 'Red' : 'Green';
+            updateHistory(colorPrediction);
+            playClickSound();
+        }
+    }
+
+    function getRandomColor() {
+        var randomIndex = Math.random() < 0.5 ? 0 : 1;
+        var colors = ['red', 'green'];
+        return colors[randomIndex];
+    }
+
+    function updateHistory(color) {
+        var historyContainer = document.getElementById("historyContainer");
+        var historyItem = document.createElement("div");
+        historyItem.style.color = color;
+        historyItem.textContent = "Predicted Color: " + (color === 'red' ? 'Red' : 'Green');
+        var colorDot = document.createElement("span");
+        colorDot.style.width = "15px";
+        colorDot.style.height = "15px";
+        colorDot.style.borderRadius = "50%";
+        colorDot.style.display = "inline-block";
+        colorDot.style.marginRight = "5px";
+        colorDot.style.backgroundColor = color;
+        historyItem.appendChild(colorDot);
+        historyContainer.appendChild(historyItem);
+    }
+
+    function playClickSound() {
+        var audio = new Audio('click-sound.mp3'); // Add the path to your click sound file
+        audio.play();
+    }
+</script>
+
+</body>
+</html>
